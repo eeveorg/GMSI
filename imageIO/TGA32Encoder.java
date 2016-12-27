@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 
 public class TGA32Encoder {
     public static void encodeTGA(BufferedImage image, File outFile) throws IOException {
-        ImageIO.write((RenderedImage)image, "png", new File("testt.png"));
         LEDataOutputStream out = new LEDataOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)));
         int w = image.getWidth();
         int h = image.getHeight();

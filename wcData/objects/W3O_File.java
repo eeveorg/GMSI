@@ -139,7 +139,7 @@ public class W3O_File {
 
     public W3O_File(MapHandle m, String name, String cate, boolean extended, String prefi) throws IOException {
         this.name = name;
-        this.prefix = prefi;
+        this.prefix = "";
         this.currentMap = m;
         this.useExtended = extended;
         this.category = cate;
@@ -228,20 +228,23 @@ public class W3O_File {
             dataPointer = this.bdis.readInt();
         }
         switch (varType) {
-            DataObject value2;
             case 0: {
+				DataObject value2;
                 value2 = new IntObject(this.bdis.readInt());
                 break;
             }
             case 1: {
+				DataObject value2;
                 value2 = new FloatObject(this.bdis.readFloat());
                 break;
             }
             case 2: {
+				DataObject value2;
                 value2 = new FloatObject(this.bdis.readFloat());
                 break;
             }
             case 3: {
+				DataObject value2;
                 try {
                     value2 = new MapStringObject(this.bdis.readString(), this.currentMap);
                     break;

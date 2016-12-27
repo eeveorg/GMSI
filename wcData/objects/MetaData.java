@@ -25,20 +25,20 @@ public class MetaData {
     private HashMap<String, DataObject> defaultValues = new HashMap(32);
     private Pattern lastDigit = Pattern.compile("([0-9]+)\\z");
 
-    public boolean hasDefaultValue(String string, AttrIdentifier attrIdentifier) {
-        return this.metatable.get(string).containsKey(attrIdentifier.getName());
+    public boolean hasDefaultValue(String category, AttrIdentifier attr) {
+        return this.metatable.get(category).containsKey(attr.getName());
     }
 
-    public ObjectAttrEntry getDefaultValue(String string, AttrIdentifier attrIdentifier) {
-        HashMap<String, Object> hashMap = this.metatable.get(string).get(attrIdentifier.getName());
-        if (hashMap == null) {
+    public ObjectAttrEntry getDefaultValue(String category, AttrIdentifier attr) {
+        HashMap<String, Object> entry = this.metatable.get(category).get(attr.getName());
+        if (entry == null) {
             return null;
         }
-        DataObject dataObject = this.defaultValues.get(hashMap.get("type"));
-        if (dataObject == null) {
-            dataObject = new StringObject("");
+        DataObject o = this.defaultValues.get(entry.get("type"));
+        if (o == null) {
+            o = new StringObject("");
         }
-        return new ObjectAttrEntry(attrIdentifier, dataObject);
+        return new ObjectAttrEntry(attr, o);
     }
 
     protected static MetaData getMetaData() {
@@ -46,124 +46,124 @@ public class MetaData {
             try {
                 metaDataCache = new MetaData(new File("./wc3data/slk"));
             }
-            catch (IOException iOException) {
-                throw new Error(iOException);
+            catch (IOException e) {
+                throw new Error(e);
             }
         }
         return metaDataCache;
     }
 
-    private MetaData(File file) throws IOException {
-        IntObject intObject = new IntObject(0);
-        FloatObject floatObject = new FloatObject(0.0f);
-        this.defaultValues.put("spellDetail", intObject);
-        this.defaultValues.put("morphFlags", intObject);
-        this.defaultValues.put("silenceFlags", intObject);
-        this.defaultValues.put("unreal", floatObject);
-        this.defaultValues.put("bool", intObject);
-        this.defaultValues.put("stackFlags", intObject);
-        this.defaultValues.put("pickFlags", intObject);
-        this.defaultValues.put("defenseTypeInt", intObject);
-        this.defaultValues.put("attackBits", intObject);
-        this.defaultValues.put("interactionFlags", intObject);
-        this.defaultValues.put("detectionType", intObject);
-        this.defaultValues.put("versionFlags", intObject);
-        this.defaultValues.put("channelFlags", intObject);
-        this.defaultValues.put("channelType", intObject);
-        this.defaultValues.put("real", floatObject);
-        this.defaultValues.put("deathType", intObject);
-        this.defaultValues.put("int", intObject);
-        this.defaultValues.put("fullFlags", intObject);
-        this.defaultValues.put("teamColor", intObject);
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\UnitMetaData.slk"), "unit");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\UnitMetaData.slk"), "item");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\DestructableMetaData.slk"), "destr");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\DoodadMetaData.slk"), "dood");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\AbilityMetaData.slk"), "abil");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\AbilityBuffMetaData.slk"), "buff");
-        this.addMetaSlkFile(new SLK_File(String.valueOf(file.getPath()) + "\\UpgradeMetaData.slk"), "upgrade");
+    private MetaData(File folder) throws IOException {
+        IntObject Int = new IntObject(0);
+        FloatObject Flo = new FloatObject(0.0f);
+        this.defaultValues.put("spellDetail", Int);
+        this.defaultValues.put("morphFlags", Int);
+        this.defaultValues.put("silenceFlags", Int);
+        this.defaultValues.put("unreal", Flo);
+        this.defaultValues.put("bool", Int);
+        this.defaultValues.put("stackFlags", Int);
+        this.defaultValues.put("pickFlags", Int);
+        this.defaultValues.put("defenseTypeInt", Int);
+        this.defaultValues.put("attackBits", Int);
+        this.defaultValues.put("interactionFlags", Int);
+        this.defaultValues.put("detectionType", Int);
+        this.defaultValues.put("versionFlags", Int);
+        this.defaultValues.put("channelFlags", Int);
+        this.defaultValues.put("channelType", Int);
+        this.defaultValues.put("real", Flo);
+        this.defaultValues.put("deathType", Int);
+        this.defaultValues.put("int", Int);
+        this.defaultValues.put("fullFlags", Int);
+        this.defaultValues.put("teamColor", Int);
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\UnitMetaData.slk"), "unit");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\UnitMetaData.slk"), "item");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\DestructableMetaData.slk"), "destr");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\DoodadMetaData.slk"), "dood");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\AbilityMetaData.slk"), "abil");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\AbilityBuffMetaData.slk"), "buff");
+        this.addMetaSlkFile(new SLK_File(String.valueOf(folder.getPath()) + "\\UpgradeMetaData.slk"), "upgrade");
         this.backwardMapping.createBackwardMapping();
     }
 
-    protected Object getEntry(String string, String string2, String string3) {
-        if (!this.metatable.containsKey(string)) {
+    protected Object getEntry(String type, String attrID, String field) {
+        if (!this.metatable.containsKey(type)) {
             return null;
         }
-        HashMap<String, HashMap<String, Object>> hashMap = this.metatable.get(string);
-        if (!hashMap.containsKey(string2)) {
+        HashMap<String, HashMap<String, Object>> typeRow = this.metatable.get(type);
+        if (!typeRow.containsKey(attrID)) {
             return null;
         }
-        return hashMap.get(string2).get(string3);
+        return typeRow.get(attrID).get(field);
     }
 
-    private void addMetaSlkFile(SLK_File sLK_File, String string) {
-        boolean bl = false;
-        boolean bl2 = false;
-        if (string.equals("unit")) {
-            bl2 = true;
-        } else if (string.equals("item")) {
-            bl = true;
+    private void addMetaSlkFile(SLK_File f, String type) {
+        boolean onlyItems = false;
+        boolean onlyUnits = false;
+        if (type.equals("unit")) {
+            onlyUnits = true;
+        } else if (type.equals("item")) {
+            onlyItems = true;
         }
-        for (String string2 : sLK_File.getTable().keySet()) {
-            HashMap<String, HashMap<String, Object>> hashMap;
-            if (bl2 && ((Integer)sLK_File.getField(string2, "useHero")).equals(0) && ((Integer)sLK_File.getField(string2, "useUnit")).equals(0) && ((Integer)sLK_File.getField(string2, "useBuilding")).equals(0) || bl && ((Integer)sLK_File.getField(string2, "useItem")).equals(0)) continue;
-            if (!this.metatable.containsKey(string)) {
-                this.metatable.put(string, new HashMap());
+        for (String s : f.getTable().keySet()) {
+            HashMap<String, HashMap<String, Object>> typerow;
+            if (onlyUnits && ((Integer)f.getField(s, "useHero")).equals(0) && ((Integer)f.getField(s, "useUnit")).equals(0) && ((Integer)f.getField(s, "useBuilding")).equals(0) || onlyItems && ((Integer)f.getField(s, "useItem")).equals(0)) continue;
+            if (!this.metatable.containsKey(type)) {
+                this.metatable.put(type, new HashMap());
             }
-            if (!(hashMap = this.metatable.get(string)).containsKey(string2)) {
-                hashMap.put(string2, new HashMap());
+            if (!(typerow = this.metatable.get(type)).containsKey(s)) {
+                typerow.put(s, new HashMap());
             }
-            HashMap<String, Object> hashMap2 = hashMap.get(string2);
-            for (String string3 : sLK_File.getRow(string2).keySet()) {
-                hashMap2.put(string3, sLK_File.getField(string2, string3));
+            HashMap<String, Object> row = typerow.get(s);
+            for (String s2 : f.getRow(s).keySet()) {
+                row.put(s2, f.getField(s, s2));
             }
         }
     }
 
-    public String backwardLookup(String string, String string2, String string3, int n) {
+    public String backwardLookup(String category, String object, String attrName, int index) {
         try {
-            return this.backwardMapping.getFirstMapping(string, string3, n, string2, 0);
+            return this.backwardMapping.getFirstMapping(category, attrName, index, object, 0);
         }
-        catch (BackwardMapping.NoSuchMappingException noSuchMappingException) {
+        catch (BackwardMapping.NoSuchMappingException e) {
             return null;
         }
     }
 
-    protected AttrIdentifier tryLookup(String string, int n, String string2, String string3, int n2) throws UnknownAttributeException {
-        String string4;
-        int n3;
+    protected AttrIdentifier tryLookup(String attrName, int index, String type, String object, int datapointer) throws UnknownAttributeException {
+        int level;
+        String key;
         block5 : {
-            string4 = null;
-            n3 = -1;
+            key = null;
+            level = -1;
             try {
-                string4 = this.backwardMapping.getFirstMapping(string2, string, n, string3, n2);
+                key = this.backwardMapping.getFirstMapping(type, attrName, index, object, datapointer);
             }
-            catch (BackwardMapping.NoSuchMappingException noSuchMappingException) {
-                Matcher matcher = this.lastDigit.matcher(string);
-                if (!matcher.find()) break block5;
-                string = string.substring(0, string.length() - matcher.group(1).length());
+            catch (BackwardMapping.NoSuchMappingException e) {
+                Matcher m = this.lastDigit.matcher(attrName);
+                if (!m.find()) break block5;
+                attrName = attrName.substring(0, attrName.length() - m.group(1).length());
                 try {
-                    string4 = this.backwardMapping.getFirstMapping(string2, string, n, string3, n2);
+                    key = this.backwardMapping.getFirstMapping(type, attrName, index, object, datapointer);
                 }
-                catch (BackwardMapping.NoSuchMappingException noSuchMappingException2) {
-                    string4 = null;
+                catch (BackwardMapping.NoSuchMappingException e1) {
+                    key = null;
                 }
-                if (string4 == null) break block5;
-                n3 = Integer.parseInt(matcher.group());
+                if (key == null) break block5;
+                level = Integer.parseInt(m.group());
             }
         }
-        if (string4 == null) {
+        if (key == null) {
             return null;
         }
-        return new AttrIdentifier(string4, n3, n2);
+        return new AttrIdentifier(key, level, datapointer);
     }
 
     public static class UnknownAttributeException
     extends Exception {
         private static final long serialVersionUID = 1;
 
-        public UnknownAttributeException(String string) {
-            super(string);
+        public UnknownAttributeException(String s) {
+            super(s);
         }
     }
 

@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import program.misc.ArchiveHandle;
@@ -104,7 +103,7 @@ public class MapHandle {
         this.struct.getEntry("objects").setValue(objects);
         W3O_File u = new W3O_File(this, "war3map.w3u", "unit", false, "");
         W3O_File a = new W3O_File(this, "war3map.w3a", "abil", true, "");
-        W3O_File b = new W3O_File(this, "war3map.w3b", "destr", false, "d");
+        W3O_File b = new W3O_File(this, "war3map.w3b", "destr", false, "");
         W3O_File d = new W3O_File(this, "war3map.w3d", "dood", true, "");
         W3O_File t = new W3O_File(this, "war3map.w3t", "item", false, "");
         W3O_File h = new W3O_File(this, "war3map.w3h", "buff", false, "");
@@ -147,7 +146,7 @@ public class MapHandle {
         }
         HashMap tables = new HashMap();
         for (String s : this.w3o_files.keySet()) {
-            Iterator l = new ArrayList();
+            ArrayList l = new ArrayList();
             l.add(new LinkedList());
             l.add(new LinkedList());
             tables.put(s, l);
@@ -170,7 +169,7 @@ public class MapHandle {
             }
             ((LinkedList)((ArrayList)tables.get(curObj.getCategory())).get(1)).add(curObj);
         }
-        for (String s : tables.keySet()) {
+        for (Object s : tables.keySet()) {
             this.w3o_files.get(s).toFile(this.io.getTempOutPath(), (ArrayList)tables.get(s));
         }
     }
@@ -356,4 +355,3 @@ public class MapHandle {
         return this.io;
     }
 }
-
