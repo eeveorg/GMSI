@@ -10,7 +10,7 @@ The decompiled code is riddled with type errors and whatnot (that seem to be ok 
 
 The list of currently changed files:
 
-imageIO/TGA32Encoder
+imageIO/TGA32Encoder.java
 
 wcData/MapHandle.java 
 
