@@ -229,22 +229,22 @@ public class W3O_File {
         }
         switch (varType) {
             case 0: {
-				DataObject value2;
+                DataObject value2;
                 value2 = new IntObject(this.bdis.readInt());
                 break;
             }
             case 1: {
-				DataObject value2;
+                DataObject value2;
                 value2 = new FloatObject(this.bdis.readFloat());
                 break;
             }
             case 2: {
-				DataObject value2;
+                DataObject value2;
                 value2 = new FloatObject(this.bdis.readFloat());
                 break;
             }
             case 3: {
-				DataObject value2;
+                DataObject value2;
                 try {
                     value2 = new MapStringObject(this.bdis.readString(), this.currentMap);
                     break;
