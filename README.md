@@ -1,5 +1,5 @@
 # GMSI
-GeX's Map Script Interpreter.
+GeX's Map Script Interpreter. Decompiled using CFR, http://www.benf.org/other/cfr/
 
 compile (drag n drop).bat requires javac to be in environment variables. It uses the original GMSI.jar (GMSI_do_not_change.jar) to recompile the code. The compiled class file is placed in the same folder as the input file.
 
